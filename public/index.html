@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NewCityAgent — Developer Dashboard & Scenario Runner</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <!-- Background Glows -->
+  <div class="glow-sphere glow-1"></div>
+  <div class="glow-sphere glow-2"></div>
+
+  <div class="app-container">
+    <!-- Header -->
+    <header class="main-header">
+      <div class="logo-area">
+        <div class="icon-glow">
+          <i class="fa-solid fa-map-location-dot"></i>
+        </div>
+        <div>
+          <h1>NewCityAgent</h1>
+          <p class="subtitle">Agentic Banking Relocation & Onboarding Platform (SBI Hackathon Prototype)</p>
+        </div>
+      </div>
+      <div class="header-actions">
+        <button id="reset-btn" class="btn btn-secondary">
+          <i class="fa-solid fa-rotate"></i> Reset Demo State
+        </button>
+        <span class="status-badge status-online">
+          <span class="pulse-dot"></span> Backend Live (SSE Connected)
+        </span>
+      </div>
+    </header>
+
+    <!-- Main Grid -->
+    <main class="dashboard-grid">
+      
+      <!-- COLUMN 1: Scenario Controls & Interactive Phone -->
+      <section class="panel-section col-left">
+        <div class="card glass-card">
+          <div class="card-header">
+            <h2><i class="fa-solid fa-play"></i> 1. Trigger Demo Scenarios</h2>
+            <p>Initiate relocation events to see the agentic flow in action.</p>
+          </div>
+          <div class="scenario-buttons">
+            <button id="trigger-worker-btn" class="scenario-btn btn-worker">
+              <div class="scen-icon"><i class="fa-solid fa-person-digging"></i></div>
+              <div class="scen-text">
+                <h3>Migrant Worker Journey</h3>
+                <p>Ramesh Kumar: dormant account, Patna ➡️ Bengaluru. Triggers Hindi push notification & remittance.</p>
+              </div>
+            </button>
+            <button id="trigger-student-btn" class="scenario-btn btn-student">
+              <div class="scen-icon"><i class="fa-solid fa-graduation-cap"></i></div>
+              <div class="scen-text">
+                <h3>Student Onboarding</h3>
+                <p>Priya Sharma: no account, Ranchi ➡️ Pune. Triggers English student account opening flow.</p>
+              </div>
+            </button>
+          </div>
+        </div>
+
+        <!-- Phone Simulator Frame -->
+        <div class="phone-frame-container">
+          <div class="phone-case">
+            <div class="phone-notch"></div>
+            <div class="phone-screen">
+              <!-- Phone Status Bar -->
+              <div class="phone-status-bar">
+                <span class="time">12:45</span>
+                <div class="phone-icons">
+                  <i class="fa-solid fa-signal"></i>
+                  <i class="fa-solid fa-wifi"></i>
+                  <i class="fa-solid fa-battery-full"></i>
+                </div>
+              </div>
+
+              <!-- Phone Screens (Switchable) -->
+              <div class="phone-content">
+                
+                <!-- SCREEN 1: Locked Screen with Push Notification -->
+                <div id="phone-lock-screen" class="phone-view active">
+                  <div class="lock-screen-bg"></div>
+                  <div class="lock-screen-info">
+                    <span class="lock-time">12:45</span>
+                    <span class="lock-date">Friday, June 26</span>
+                  </div>
+                  
+                  <!-- Push Notification Banner -->
+                  <div id="notification-banner" class="notification-banner hidden">
+                    <div class="notif-header">
+                      <img src="https://logodix.com/logo/1848529.png" onerror="this.src='https://placehold.co/40x40/0054a6/ffffff?text=SBI'" class="notif-icon" alt="SBI Logo">
+                      <span class="notif-title">SBI YONO</span>
+                      <span class="notif-time">now</span>
+                    </div>
+                    <div class="notif-body">
+                      <h4 id="notif-alert-title">Welcome to Bengaluru! 🌸</h4>
+                      <p id="notif-alert-msg">Hello Ramesh, your SBI account works nationwide. Reactivate your account instantly...</p>
+                    </div>
+                    <div class="notif-footer">
+                      <span>Swipe down or tap to open</span>
+                    </div>
+                  </div>
+
+                  <div class="lock-screen-footer">
+                    <i class="fa-solid fa-lock"></i>
+                    <p>Swipe up or tap notification to begin</p>
+                  </div>
+                </div>
+
+                <!-- SCREEN 2: Aadhaar Reactivation (Ramesh) -->
+                <div id="phone-reactivation-screen" class="phone-view">
+                  <div class="sbi-app-header">
+                    <i class="fa-solid fa-chevron-left phone-back-btn" data-target="phone-lock-screen"></i>
+                    <h3>SBI YONO Lite</h3>
+                  </div>
+                  <div class="phone-body">
+                    <div class="flow-indicator">Step 1 of 3: Verification</div>
+                    <h2 class="flow-title">Reactivate Account</h2>
+                    <p class="flow-desc">Provide your Aadhaar details to verify identity and reactivate your dormant savings account.</p>
+                    
+                    <div class="input-group">
+                      <label>Registered Phone Number</label>
+                      <input type="text" id="reactivate-phone" value="9876543210" readonly class="phone-input-disabled">
+                    </div>
+
+                    <div class="input-group">
+                      <label>Aadhaar Number (12 Digits)</label>
+                      <input type="text" id="reactivate-aadhaar" placeholder="1234 5678 9012" value="1234 5678 9012" maxlength="14">
+                    </div>
+
+                    <button id="send-otp-btn" class="btn btn-primary btn-block">Send Aadhaar OTP</button>
+                    
+                    <!-- OTP Input Section -->
+                    <div id="otp-entry-section" class="hidden-animated mt-4">
+                      <div class="input-group">
+                        <label>Enter 6-Digit OTP</label>
+                        <div class="otp-input-wrapper">
+                          <input type="text" id="reactivate-otp" placeholder="123456" maxlength="6">
+                        </div>
+                        <p class="otp-help">Check the live terminal on the right for the generated OTP.</p>
+                      </div>
+                      <button id="verify-otp-btn" class="btn btn-success btn-block">Verify & Reactivate</button>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- SCREEN 3: Remittance Setup (Ramesh) -->
+                <div id="phone-remittance-screen" class="phone-view">
+                  <div class="sbi-app-header">
+                    <h3>SBI YONO Lite</h3>
+                  </div>
+                  <div class="phone-body">
+                    <div class="flow-indicator text-success">Step 2 of 3: Account Active!</div>
+                    <h2 class="flow-title">Set Up Remittance</h2>
+                    <p class="flow-desc">Welcome back! Your account is active. Schedule a recurring, zero-friction monthly transfer to your family back home.</p>
+
+                    <div class="input-group">
+                      <label>Beneficiary Name (Family Member)</label>
+                      <input type="text" id="remit-name" placeholder="e.g., Sunita Devi" value="Sunita Devi (Wife)">
+                    </div>
+
+                    <div class="input-group">
+                      <label>Beneficiary Account Number</label>
+                      <input type="text" id="remit-account" placeholder="e.g., 30291048182" value="30291048182">
+                    </div>
+
+                    <div class="input-group">
+                      <label>Monthly Amount (₹)</label>
+                      <input type="number" id="remit-amount" placeholder="e.g., 10000" value="15000">
+                    </div>
+
+                    <div class="input-group">
+                      <label>Transfer Date</label>
+                      <select id="remit-frequency">
+                        <option value="monthly">1st of every month (Monthly)</option>
+                        <option value="weekly">Every Monday (Weekly)</option>
+                      </select>
+                    </div>
+
+                    <button id="schedule-remit-btn" class="btn btn-primary btn-block">Schedule Remittance</button>
+                  </div>
+                </div>
+
+                <!-- SCREEN 4: Student Account Opening (Priya) -->
+                <div id="phone-student-screen" class="phone-view">
+                  <div class="sbi-app-header">
+                    <i class="fa-solid fa-chevron-left phone-back-btn" data-target="phone-lock-screen"></i>
+                    <h3>SBI InstaOn</h3>
+                  </div>
+                  <div class="phone-body">
+                    <div class="flow-indicator">Insta Savings Account</div>
+                    <h2 class="flow-title">Open Student Account</h2>
+                    <p class="flow-desc">Relocated for college? Open a digital savings account in minutes with zero paperwork.</p>
+
+                    <div class="input-group">
+                      <label>Full Name</label>
+                      <input type="text" id="student-name" value="Priya Sharma">
+                    </div>
+
+                    <div class="input-group">
+                      <label>Mobile Number</label>
+                      <input type="text" id="student-phone" value="9876543211" readonly class="phone-input-disabled">
+                    </div>
+
+                    <div class="input-group">
+                      <label>Aadhaar Number</label>
+                      <input type="text" id="student-aadhaar" value="234567890123" placeholder="Aadhaar Number">
+                    </div>
+
+                    <div class="input-group">
+                      <label>Preferred Language</label>
+                      <select id="student-lang">
+                        <option value="English" selected>English</option>
+                        <option value="Hindi">Hindi (हिंदी)</option>
+                        <option value="Kannada">Kannada (ಕನ್ನಡ)</option>
+                      </select>
+                    </div>
+
+                    <div class="input-group">
+                      <label>Initial Deposit (₹)</label>
+                      <input type="number" id="student-deposit" value="1000">
+                    </div>
+
+                    <button id="open-student-btn" class="btn btn-student btn-block">Open Digital Account</button>
+                  </div>
+                </div>
+
+                <!-- SCREEN 5: Onboarding Success / Features (Student & Worker) -->
+                <div id="phone-success-screen" class="phone-view">
+                  <div class="phone-body text-center success-screen">
+                    <div class="success-icon-badge">
+                      <i class="fa-solid fa-circle-check"></i>
+                    </div>
+                    <h2 class="flow-title mt-4">Journey Completed!</h2>
+                    <p id="success-description" class="flow-desc">Your onboarding is successful. Enjoy nationwide banking in your new city.</p>
+
+                    <!-- Features Card -->
+                    <div class="features-showcase card mt-4">
+                      <div class="feature-item">
+                        <i class="fa-solid fa-credit-card text-primary"></i>
+                        <div>
+                          <h4>Virtual Debit Card Active</h4>
+                          <p>Ready for online purchases & UPI links.</p>
+                        </div>
+                      </div>
+                      <div id="feature-remit-item" class="feature-item">
+                        <i class="fa-solid fa-paper-plane text-success"></i>
+                        <div>
+                          <h4>Remittance Active</h4>
+                          <p>Automated ₹15,000 scheduled monthly.</p>
+                        </div>
+                      </div>
+                      <div id="feature-loan-item" class="feature-item hidden">
+                        <i class="fa-solid fa-graduation-cap text-warning"></i>
+                        <div>
+                          <h4>Pre-qualified Student Loan</h4>
+                          <p>Up to ₹4 Lakhs pre-approved for college fees.</p>
+                        </div>
+                      </div>
+                    </div>
+
+                    <button id="exit-success-btn" class="btn btn-secondary btn-block mt-4">Back to Lock Screen</button>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- COLUMN 2: Live Backend Events & Database Explorer -->
+      <section class="panel-section col-right">
+        <!-- Live SSE Terminal -->
+        <div class="card glass-card terminal-card">
+          <div class="card-header terminal-header">
+            <h2>
+              <span class="terminal-dot red"></span>
+              <span class="terminal-dot yellow"></span>
+              <span class="terminal-dot green"></span>
+              <i class="fa-solid fa-terminal ml-2"></i> Live Backend Event Log (SSE Stream)
+            </h2>
+            <button id="clear-terminal-btn" class="btn btn-xs btn-outline">
+              <i class="fa-solid fa-trash-can"></i> Clear Log
+            </button>
+          </div>
+          <div id="terminal-output" class="terminal-output">
+            <div class="terminal-line system-msg">[SYSTEM] Listening for real-time events...</div>
+          </div>
+        </div>
+
+        <!-- Database Explorer -->
+        <div class="card glass-card db-card">
+          <div class="card-header tab-header">
+            <div class="tabs">
+              <button class="tab-btn active" data-tab="tab-users"><i class="fa-solid fa-users"></i> Accounts Database</button>
+              <button class="tab-btn" data-tab="tab-notifications"><i class="fa-solid fa-bell"></i> Outbox (SMS/Push)</button>
+              <button class="tab-btn" data-tab="tab-remittances"><i class="fa-solid fa-hand-holding-dollar"></i> Remittances</button>
+            </div>
+            <button id="refresh-db-btn" class="btn btn-xs btn-outline-primary">
+              <i class="fa-solid fa-arrows-rotate"></i> Refresh
+            </button>
+          </div>
+          <div class="db-content-panel">
+            <!-- Users Tab -->
+            <div id="tab-users" class="tab-panel active">
+              <div class="table-responsive">
+                <table class="db-table">
+                  <thead>
+                    <tr>
+                      <th>Name</th>
+                      <th>Phone / Segment</th>
+                      <th>Language</th>
+                      <th>Home ➡️ Current</th>
+                      <th>SBI Status</th>
+                      <th>Balance</th>
+                    </tr>
+                  </thead>
+                  <tbody id="db-users-body">
+                    <!-- Dynamic -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            
+            <!-- Notifications Tab -->
+            <div id="tab-notifications" class="tab-panel">
+              <div class="table-responsive">
+                <table class="db-table">
+                  <thead>
+                    <tr>
+                      <th>User</th>
+                      <th>Channel</th>
+                      <th>Language</th>
+                      <th>Title & Message</th>
+                      <th>Timestamp</th>
+                    </tr>
+                  </thead>
+                  <tbody id="db-notifications-body">
+                    <tr><td colspan="5" class="text-center">No notifications dispatched yet.</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- Remittances Tab -->
+            <div id="tab-remittances" class="tab-panel">
+              <div class="table-responsive">
+                <table class="db-table">
+                  <thead>
+                    <tr>
+                      <th>User</th>
+                      <th>Beneficiary Name</th>
+                      <th>Account Number</th>
+                      <th>Amount</th>
+                      <th>Frequency</th>
+                      <th>Status</th>
+                    </tr>
+                  </thead>
+                  <tbody id="db-remittances-body">
+                    <tr><td colspan="6" class="text-center">No remittance schedules active.</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="main-footer">
+      <p>NewCityAgent Backend Platform • Built using Node.js, Express & Google Gemini • Powered by Antigravity</p>
+    </footer>
+  </div>
+
+  <script src="/app.js"></script>
+</body>
+</html>

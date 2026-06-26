@@ -6,20 +6,20 @@ Developed as part of **Idea #7 (Pillar 1)**, this system aims to capture the cri
 
 ---
 
-## 📌 Core Problem
+##  Core Problem
 * **The Scale:** Over 30 million internal migrants change cities annually in India.
 * **The Opportunity Gap:** Banks often miss the exact moment of relocation, leading to customer churn or inactivity.
 * **The Risk:** Migrants frequently default to informal money transfer channels or competitor financial institutions due to friction in local onboarding.
 
 ---
 
-## 👤 User Personas
+## User Personas
 * **Internal Migrant Workers:** Individuals relocating for employment who require rapid, reliable remittance services to send money home to their families.
 * **Students (Ages 18–24):** Individuals moving for higher education who require student accounts, digital payment setups, and potential education loan pre-qualification.
 
 ---
 
-## 🤖 Agentic Behavior & Hyper-Personalization
+## Agentic Behavior & Hyper-Personalization
 The agent monitors consented signals to identify relocation and tailors the outreach journey dynamically based on the customer's profile:
 
 ### 1. Relocation Detection (Consent-Based)
@@ -54,7 +54,7 @@ graph TD
 
 ---
 
-## 🔌 SBI Integration Points
+##  SBI Integration Points
 * **UPI Address Registry:** For detecting billing and payment address updates.
 * **YONO Geolocation Events:** To track mobile banking login locations.
 * **CBS Dormancy Flag:** To check whether a returning customer has an inactive account.
@@ -63,7 +63,7 @@ graph TD
 
 ---
 
-## 🛣️ End-to-End Journey Flow
+##  End-to-End Journey Flow
 1. **Trigger:** The Location Signal Processor flags that a customer appears to be in a new city.
 2. **Outreach:** The customer receives a push notification or SMS: 
    > *"Welcome to [City]. Your SBI account works nationwide — here is how to use it locally."*
@@ -75,14 +75,14 @@ graph TD
 
 ---
 
-## 🔒 Compliance, Security & Privacy
+## Compliance, Security & Privacy
 * **Consented Data Only:** Location inference and tracking rely strictly on consented UPI, ATM, and app usage data.
 * **Opt-Out Mechanism:** Users can easily opt out of location-based personalization at any time through their privacy settings.
 * **Data Minimization:** No continuous GPS tracking is performed; analysis is event-driven based on transactional touchpoints.
 
 ---
 
-## 📈 Key Success Metrics
+##  Key Success Metrics
 * **Dormant Account Reactivations:** Percentage of dormant accounts successfully reactivated post-relocation.
 * **New Account Acquisition:** Conversion rate of newly arrived migrants without prior accounts.
 * **Remittance Adoption:** Percentage of users completing their first domestic money transfer within 14 days of relocation.
@@ -90,7 +90,7 @@ graph TD
 
 ---
 
-## 🚀 Hackathon Demo Scenario
+##  Hackathon Demo Scenario
 The prototype demonstrates a complete end-to-end flow in a **4-minute scenario**:
 1. A customer with a **dormant account** moves to a new city.
 2. A simulated **city-change signal** is generated.

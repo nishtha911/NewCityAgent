@@ -6,8 +6,9 @@ export default function CustomerView() {
   const [user, setUser] = useState(null);
   const [notification, setNotification] = useState(null);
   const [otp, setOtp] = useState('');
-  
-  // Remittance state
+  const [successMsg, setSuccessMsg] = useState('');
+  const [errorMsg, setErrorMsg] = useState('');
+
   const [remittanceData, setRemittanceData] = useState({
     beneficiaryName: '',
     beneficiaryAccount: '',
@@ -15,39 +16,49 @@ export default function CustomerView() {
   });
 
   const fetchState = async () => {
-    const data = await getState();
-    if (data.users && data.users.length > 0) {
-      // Find the latest notification, if any
-      const latestNotif = data.notifications.length > 0 ? data.notifications[data.notifications.length - 1] : null;
-      
-      let targetUser = null;
-      if (latestNotif) {
-        // If there's a notification, show the simulator for that specific user
-        targetUser = data.users.find(u => u.id === latestNotif.userId);
-        setNotification(latestNotif);
+    try {
+      const data = await getState();
+      if (data && data.users && data.users.length > 0) {
+        const latestNotif = data.notifications && data.notifications.length > 0
+          ? data.notifications[data.notifications.length - 1]
+          : null;
+
+        let targetUser = null;
+        if (latestNotif) {
+          targetUser = data.users.find(u => u.id === latestNotif.userId) || null;
+          setNotification(latestNotif);
+        }
+        setUser(targetUser);
       }
-      
-      // Only set user if there is an active scenario (a notification was sent)
-      // If no notification, we keep user null to show the "Waiting for signals" screen
-      setUser(targetUser || null);
+    } catch (e) {
+      // silently ignore polling errors
     }
   };
 
   useEffect(() => {
-    // Poll for state changes every few seconds to simulate pushing to mobile
     const interval = setInterval(fetchState, 3000);
     fetchState();
     return () => clearInterval(interval);
   }, []);
 
+  const showSuccess = (msg) => {
+    setSuccessMsg(msg);
+    setTimeout(() => setSuccessMsg(''), 4000);
+  };
+
+  const showError = (msg) => {
+    setErrorMsg(msg);
+    setTimeout(() => setErrorMsg(''), 4000);
+  };
+
   const handleReactivate = async () => {
     if (!user) return;
     try {
       await reactivateAccount(user.phone, otp);
-      alert('Account Successfully Reactivated!');
+      showSuccess('Account Successfully Reactivated!');
       fetchState();
-    } catch(e) {
-      alert('Error reactivating');
+    } catch (e) {
+      showError('Error reactivating account. Please try again.');
     }
   };
 
@@ -56,22 +67,37 @@ export default function CustomerView() {
     if (!user) return;
     try {
       await setupRemittance({ phone: user.phone, ...remittanceData });
-      alert('Remittance Schedule Created Successfully!');
+      showSuccess('Remittance Schedule Created Successfully!');
       fetchState();
-    } catch(e) {
-      alert('Error creating remittance');
+    } catch (e) {
+      showError('Error creating remittance. Please try again.');
     }
   };
 
+  // accountStatus is the correct field name from the backend
+  const accountStatus = user?.accountStatus || user?.status || 'unknown';
+
   return (
-    <div style={{ padding: '40px 80px', display: 'flex', justifyContent: 'center' }}>
-      
+    <div style={{ padding: '40px 80px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+
+      {/* Toast notifications */}
+      {successMsg && (
+        <div style={{ position: 'fixed', bottom: '20px', right: '20px', background: '#22c55e', color: 'white', padding: '12px 20px', borderRadius: '8px', zIndex: 9999, fontWeight: 'bold', boxShadow: '0 4px 12px rgba(0,0,0,0.2)' }}>
+          {successMsg}
+        </div>
+      )}
+      {errorMsg && (
+        <div style={{ position: 'fixed', bottom: '20px', right: '20px', background: '#ef4444', color: 'white', padding: '12px 20px', borderRadius: '8px', zIndex: 9999, fontWeight: 'bold', boxShadow: '0 4px 12px rgba(0,0,0,0.2)' }}>
+          {errorMsg}
+        </div>
+      )}
+
       {/* Simulated Android Device */}
       <div style={{
         width: '360px',
         height: '740px',
         border: '14px solid #1a1a1a',
-        borderRadius: '24px', /* Less rounded for Android feel */
+        borderRadius: '24px',
         background: 'var(--bg-primary)',
         overflow: 'hidden',
         position: 'relative',
@@ -80,12 +106,13 @@ export default function CustomerView() {
         flexDirection: 'column'
       }}>
         {/* Android Status Bar */}
-        <div style={{ 
-          background: 'var(--bg-topbar)', 
-          color: 'white', 
-          padding: '8px 16px', 
-          display: 'flex', 
+        <div style={{
+          background: 'var(--bg-topbar)',
+          color: 'white',
+          padding: '8px 16px',
+          display: 'flex',
           justifyContent: 'space-between',
+          alignItems: 'center',
           fontSize: '0.75rem',
           borderBottom: '1px solid #333'
         }}>
@@ -97,7 +124,7 @@ export default function CustomerView() {
 
         {/* App Header */}
         <div style={{ background: 'var(--primary-purple)', color: 'white', padding: '15px', textAlign: 'center' }}>
-          <h2 style={{ fontSize: '1.2rem', margin: 0 }}>NewCityAgent</h2>
+          <h2 style={{ fontSize: '1.2rem', margin: 0, color: 'white' }}>NewCityAgent</h2>
         </div>
 
         {/* Main Content Area */}
@@ -110,14 +137,14 @@ export default function CustomerView() {
             </div>
           ) : (
             <>
-              <h3 style={{ marginBottom: '5px' }}>Hi, {user.name}</h3>
-              <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>Status: 
-                <span style={{ 
-                  color: user.status === 'dormant' ? '#e74c3c' : '#2ecc71',
+              <h3 style={{ marginBottom: '5px', color: 'var(--text-primary)' }}>Hi, {user.name}</h3>
+              <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>Status:
+                <span style={{
+                  color: accountStatus === 'dormant' ? '#e74c3c' : accountStatus === 'active' ? '#2ecc71' : '#888',
                   fontWeight: 'bold',
                   marginLeft: '5px'
                 }}>
-                  {user.status.toUpperCase()}
+                  {accountStatus.toUpperCase()}
                 </span>
               </p>
 
@@ -132,13 +159,13 @@ export default function CustomerView() {
                   fontSize: '0.9rem',
                   lineHeight: '1.4'
                 }}>
-                  <strong>Agent Alert</strong>
-                  <p style={{ marginTop: '5px' }}>{notification.message}</p>
+                  <strong style={{ color: 'white' }}>Agent Alert</strong>
+                  <p style={{ marginTop: '5px', color: 'white' }}>{notification.message}</p>
                 </div>
               )}
 
               {/* Dormant Reactivation Flow */}
-              {user.status === 'dormant' && (
+              {accountStatus === 'dormant' && (
                 <div style={{
                   marginTop: '20px',
                   padding: '15px',
@@ -150,8 +177,8 @@ export default function CustomerView() {
                     <ShieldAlert size={20} />
                     <strong>Aadhaar Reactivation Required</strong>
                   </div>
-                  <input 
-                    type="text" 
+                  <input
+                    type="text"
                     placeholder="Enter Aadhaar OTP"
                     value={otp}
                     onChange={e => setOtp(e.target.value)}
@@ -160,10 +187,12 @@ export default function CustomerView() {
                       padding: '10px',
                       border: '1px solid var(--card-border)',
                       borderRadius: '4px',
-                      marginBottom: '10px'
+                      marginBottom: '10px',
+                      background: 'var(--bg-primary)',
+                      color: 'var(--text-primary)'
                     }}
                   />
-                  <button 
+                  <button
                     onClick={handleReactivate}
                     style={{
                       width: '100%',
@@ -180,8 +209,8 @@ export default function CustomerView() {
                 </div>
               )}
 
-              {/* Remittance Setup Flow (Only if Active) */}
-              {user.status === 'active' && user.segment === 'migrant_worker' && (
+              {/* Remittance Setup Flow (Only if Active Worker) */}
+              {accountStatus === 'active' && user.segment === 'worker' && (
                 <div style={{
                   marginTop: '20px',
                   padding: '15px',
@@ -194,25 +223,25 @@ export default function CustomerView() {
                     <strong>Send Money Home</strong>
                   </div>
                   <form onSubmit={handleRemittance}>
-                    <input 
+                    <input
                       type="text" placeholder="Beneficiary Name" required
                       value={remittanceData.beneficiaryName}
-                      onChange={e => setRemittanceData({...remittanceData, beneficiaryName: e.target.value})}
-                      style={{ width: '100%', padding: '10px', marginBottom: '10px', border: '1px solid var(--card-border)', borderRadius: '4px' }}
+                      onChange={e => setRemittanceData({ ...remittanceData, beneficiaryName: e.target.value })}
+                      style={{ width: '100%', padding: '10px', marginBottom: '10px', border: '1px solid var(--card-border)', borderRadius: '4px', background: 'var(--bg-primary)', color: 'var(--text-primary)' }}
                     />
-                    <input 
+                    <input
                       type="text" placeholder="Account Number" required
                       value={remittanceData.beneficiaryAccount}
-                      onChange={e => setRemittanceData({...remittanceData, beneficiaryAccount: e.target.value})}
-                      style={{ width: '100%', padding: '10px', marginBottom: '10px', border: '1px solid var(--card-border)', borderRadius: '4px' }}
+                      onChange={e => setRemittanceData({ ...remittanceData, beneficiaryAccount: e.target.value })}
+                      style={{ width: '100%', padding: '10px', marginBottom: '10px', border: '1px solid var(--card-border)', borderRadius: '4px', background: 'var(--bg-primary)', color: 'var(--text-primary)' }}
                     />
-                    <input 
+                    <input
                       type="number" placeholder="Amount (₹)" required
                       value={remittanceData.amount}
-                      onChange={e => setRemittanceData({...remittanceData, amount: e.target.value})}
-                      style={{ width: '100%', padding: '10px', marginBottom: '15px', border: '1px solid var(--card-border)', borderRadius: '4px' }}
+                      onChange={e => setRemittanceData({ ...remittanceData, amount: e.target.value })}
+                      style={{ width: '100%', padding: '10px', marginBottom: '15px', border: '1px solid var(--card-border)', borderRadius: '4px', background: 'var(--bg-primary)', color: 'var(--text-primary)' }}
                     />
-                    <button 
+                    <button
                       type="submit"
                       style={{
                         width: '100%',
@@ -242,11 +271,8 @@ export default function CustomerView() {
           alignItems: 'center',
           borderTop: '1px solid #222'
         }}>
-          {/* Back button (triangle) */}
           <div style={{ width: '0', height: '0', borderTop: '8px solid transparent', borderBottom: '8px solid transparent', borderRight: '12px solid #888' }} />
-          {/* Home button (circle) */}
           <div style={{ width: '16px', height: '16px', borderRadius: '50%', border: '2px solid #888' }} />
-          {/* Recent apps button (square) */}
           <div style={{ width: '14px', height: '14px', border: '2px solid #888', borderRadius: '2px' }} />
         </div>
       </div>

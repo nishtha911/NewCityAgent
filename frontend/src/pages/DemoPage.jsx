@@ -124,30 +124,41 @@ export default function DemoPage() {
         <div style={{ textAlign: 'center' }}>
           <h2 style={{ marginBottom: '20px', color: 'var(--primary-purple)' }}>Agent Signal Processing</h2>
           
-          <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '20px', marginBottom: '30px' }}>
-            <div style={{ padding: '15px 30px', background: 'var(--bg-secondary)', borderRadius: '8px', border: '1px solid var(--card-border)', fontWeight: 'bold' }}>
-              {result.signalResult.previousCity}
+          {!result.signalResult?.cityChangeDetected ? (
+            <div style={{ background: '#fff3cd', border: '1px solid #ffc107', borderRadius: '8px', padding: '20px', maxWidth: '500px', margin: '0 auto' }}>
+              <p style={{ color: '#856404' }}>No city change detected for this user. The signal was processed but no outreach was triggered because the user was already in that city. Try resetting the demo and running it again.</p>
+              <button onClick={() => { handleReset(); }} style={{ marginTop: '15px', background: 'var(--secondary-magenta)', color: 'white', padding: '10px 20px', borderRadius: '4px' }}>
+                Reset & Try Again
+              </button>
             </div>
-            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', color: 'var(--secondary-magenta)' }}>
-              <span style={{ fontSize: '0.8rem', fontWeight: 'bold', marginBottom: '5px' }}>{result.source} SIGNAL</span>
-              <ArrowRight size={24} />
-            </div>
-            <div style={{ padding: '15px 30px', background: 'var(--bg-secondary)', borderRadius: '8px', border: '2px solid var(--highlight-cyan)', fontWeight: 'bold', color: 'var(--highlight-cyan)' }}>
-              {result.signalResult.newCity}
-            </div>
-          </div>
+          ) : (
+            <>
+              <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '20px', marginBottom: '30px' }}>
+                <div style={{ padding: '15px 30px', background: 'var(--bg-secondary)', borderRadius: '8px', border: '1px solid var(--card-border)', fontWeight: 'bold' }}>
+                  {result.signalResult.previousCity}
+                </div>
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', color: 'var(--secondary-magenta)' }}>
+                  <span style={{ fontSize: '0.8rem', fontWeight: 'bold', marginBottom: '5px' }}>{result.source} SIGNAL</span>
+                  <ArrowRight size={24} />
+                </div>
+                <div style={{ padding: '15px 30px', background: 'var(--bg-secondary)', borderRadius: '8px', border: '2px solid var(--highlight-cyan)', fontWeight: 'bold', color: 'var(--highlight-cyan)' }}>
+                  {result.signalResult.newCity}
+                </div>
+              </div>
 
-          <div style={{ background: 'var(--gradient-banner)', color: 'white', padding: '20px', borderRadius: '8px', maxWidth: '600px', margin: '0 auto', textAlign: 'left' }}>
-            <h4 style={{ marginBottom: '10px', opacity: 0.9 }}>Generated Hyper-Personalized Outreach:</h4>
-            <p style={{ fontSize: '1.1rem', lineHeight: '1.5' }}>"{result.signalResult.notification.message}"</p>
-          </div>
+              <div style={{ background: 'var(--gradient-banner)', color: 'white', padding: '20px', borderRadius: '8px', maxWidth: '600px', margin: '0 auto', textAlign: 'left' }}>
+                <h4 style={{ marginBottom: '10px', opacity: 0.9 }}>Generated Hyper-Personalized Outreach:</h4>
+                <p style={{ fontSize: '1.1rem', lineHeight: '1.5' }}>"{result.signalResult.notification?.message}"</p>
+              </div>
 
-          <button 
-            onClick={() => setStep(3)}
-            style={{ marginTop: '30px', background: 'var(--primary-purple)', color: 'white', padding: '12px 30px', borderRadius: '4px', fontSize: '1.1rem', fontWeight: 'bold' }}
-          >
-            Proceed to Onboarding Flow
-          </button>
+              <button 
+                onClick={() => setStep(3)}
+                style={{ marginTop: '30px', background: 'var(--primary-purple)', color: 'white', padding: '12px 30px', borderRadius: '4px', fontSize: '1.1rem', fontWeight: 'bold' }}
+              >
+                Proceed to Onboarding Flow
+              </button>
+            </>
+          )}
         </div>
       )}
 

@@ -25,21 +25,12 @@ export default function Header() {
       <div style={{ display: 'flex', gap: '20px', alignItems: 'center' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
           <div style={{
-            width: '32px',
-            height: '32px',
-            backgroundColor: '#444',
-            borderRadius: '4px',
+            height: '40px',
             display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            fontSize: '10px',
-            color: '#fff',
-            overflow: 'hidden'
+            alignItems: 'center'
           }}>
-            {/* TODO: Add logo image here in /public folder e.g. <img src="/logo.png" alt="logo" style={{width: '100%'}}/> */}
-            LOGO
+            <img src="/logo.png" alt="NewCityAgent Logo" style={{ height: '100%', objectFit: 'contain' }} />
           </div>
-          <span style={{ fontWeight: 'bold', fontSize: '1.2rem' }}>NewCity<span style={{ color: 'var(--highlight-cyan)' }}>Agent</span></span>
         </div>
         <div style={{ borderLeft: '1px solid #333', paddingLeft: '20px' }}>
           <button 

@@ -26,8 +26,7 @@ function AppContent() {
         color: 'white',
         boxShadow: '0 4px 6px rgba(0,0,0,0.1)'
       }}>
-        <h1 style={{ fontSize: '1.8rem', margin: 0 }}>NewCityAgent <span style={{ fontWeight: 'normal', opacity: 0.8 }}>| Hackathon Demo</span></h1>
-        <p style={{ marginTop: '5px', opacity: 0.9 }}>Agentic Banking Solution for Migrant Workers and Students</p>
+        <h1 style={{ fontSize: '2.2rem', margin: 0, fontWeight: 'bold' }}>Agentic Banking Solution for Migrant Workers and Students</h1>
       </div>
       
       <main style={{ flexGrow: 1, backgroundColor: 'var(--bg-primary)', position: 'relative' }}>

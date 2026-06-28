@@ -21,15 +21,12 @@ app.use(express.urlencoded({ extended: true }));
 // HTTP Request Logger
 app.use(morgan('dev'));
 
-// Serve Static Files from "public" directory
-app.use(express.static(path.join(__dirname, 'public')));
-
 // Mount API Routes
 app.use('/api', apiRouter);
 
-// Serve Dashboard UI at root
+// API routing handles everything; frontend is on port 5173
 app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+  res.status(200).json({ message: "NewCityAgent Backend API is running." });
 });
 
 // 404 Handler

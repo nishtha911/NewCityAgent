@@ -1,10 +1,8 @@
 import React from 'react';
 import { triggerScenario, resetState } from '../services/api';
-import { useSSE } from '../hooks/useSSE';
-import { Terminal, RefreshCw, Zap } from 'lucide-react';
+import { RefreshCw, Zap } from 'lucide-react';
 
 export default function Dashboard() {
-  const events = useSSE('/api/demo/events');
 
   const handleTrigger = async (scenario) => {
     try {
@@ -21,10 +19,10 @@ export default function Dashboard() {
   };
 
   return (
-    <div style={{ padding: '40px 80px', display: 'flex', gap: '40px' }}>
+    <div style={{ padding: '40px 80px', display: 'flex', justifyContent: 'center' }}>
       
       {/* Controls Section */}
-      <div style={{ flex: 1 }}>
+      <div style={{ flex: 1, maxWidth: '600px' }}>
         <h2 style={{ marginBottom: '20px', color: 'var(--primary-purple)' }}>Agent Control Panel</h2>
         
         <div style={{
@@ -45,7 +43,8 @@ export default function Dashboard() {
                 borderRadius: '4px',
                 display: 'flex',
                 alignItems: 'center',
-                gap: '10px'
+                gap: '10px',
+                cursor: 'pointer'
               }}
             >
               <Zap size={16} /> Migrant Worker (ATM Signal)
@@ -59,7 +58,8 @@ export default function Dashboard() {
                 borderRadius: '4px',
                 display: 'flex',
                 alignItems: 'center',
-                gap: '10px'
+                gap: '10px',
+                cursor: 'pointer'
               }}
             >
               <Zap size={16} /> Student (SIM Signal)
@@ -78,49 +78,12 @@ export default function Dashboard() {
               borderRadius: '4px',
               display: 'flex',
               alignItems: 'center',
-              gap: '8px'
+              gap: '8px',
+              cursor: 'pointer'
             }}
           >
             <RefreshCw size={16} /> Reset State
           </button>
-        </div>
-      </div>
-
-      {/* Live Logs Section */}
-      <div style={{ flex: 1 }}>
-        <div style={{
-          background: '#0a0a0a',
-          color: '#00ff00',
-          fontFamily: 'monospace',
-          padding: '20px',
-          borderRadius: '8px',
-          height: '400px',
-          overflowY: 'auto',
-          boxShadow: 'var(--card-shadow)'
-        }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '20px', color: '#fff' }}>
-            <Terminal size={20} />
-            <h3 style={{ margin: 0 }}>Backend Event Stream</h3>
-          </div>
-          
-          {events.length === 0 ? (
-            <p style={{ color: '#888' }}>Waiting for signals...</p>
-          ) : (
-            events.map((ev, idx) => (
-              <div key={idx} style={{ marginBottom: '10px', borderBottom: '1px solid #333', paddingBottom: '10px' }}>
-                <span style={{ color: '#888', fontSize: '0.8rem' }}>
-                  {new Date(ev.timestamp).toLocaleTimeString()}
-                </span>
-                <span style={{ color: '#ffb86c', marginLeft: '10px' }}>[{ev.type}]</span>
-                <p style={{ margin: '5px 0 0 0' }}>{ev.message}</p>
-                {ev.data && (
-                  <pre style={{ fontSize: '0.75rem', color: '#8be9fd', marginTop: '5px' }}>
-                    {JSON.stringify(ev.data, null, 2)}
-                  </pre>
-                )}
-              </div>
-            ))
-          )}
         </div>
       </div>
       

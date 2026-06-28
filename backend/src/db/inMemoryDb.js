@@ -47,8 +47,6 @@ let db = {
   events: []
 };
 
-// Event listeners for SSE streaming
-let sseClients = [];
 
 export const inMemoryDb = {
   // Reset database to seed state
@@ -131,31 +129,7 @@ export const inMemoryDb = {
       details
     };
     db.events.push(event);
-    
-    // Stream event to all active SSE clients
-    sseClients.forEach(client => {
-      client.res.write(`data: ${JSON.stringify(event)}\n\n`);
-    });
-    
+
     return event;
-  },
-
-  // SSE client registration
-  registerSseClient: (req, res) => {
-    res.setHeader('Content-Type', 'text/event-stream');
-    res.setHeader('Cache-Control', 'no-cache');
-    res.setHeader('Connection', 'keep-alive');
-    res.flushHeaders();
-
-    const clientId = Date.now();
-    const newClient = { id: clientId, res };
-    sseClients.push(newClient);
-
-    // Send initial connection event and current state
-    res.write(`data: ${JSON.stringify({ type: 'CONNECTED', message: 'Connected to NewCityAgent SSE Stream', timestamp: new Date() })}\n\n`);
-
-    req.on('close', () => {
-      sseClients = sseClients.filter(c => c.id !== clientId);
-    });
   }
 };

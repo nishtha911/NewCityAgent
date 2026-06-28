@@ -137,13 +137,6 @@ router.post('/demo/reset', (req, res) => {
 });
 
 /**
- * Server-Sent Events (SSE) route for streaming live logs to dashboard
- */
-router.get('/demo/events', (req, res) => {
-  inMemoryDb.registerSseClient(req, res);
-});
-
-/**
  * Triggers a pre-packaged hackathon demo scenario
  */
 router.post('/demo/trigger-scenario', asyncHandler(async (req, res) => {

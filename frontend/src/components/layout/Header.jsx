@@ -23,14 +23,13 @@ export default function Header() {
       fontSize: '0.9rem'
     }}>
       <div style={{ display: 'flex', gap: '20px', alignItems: 'center' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-          <div style={{
-            height: '40px',
-            display: 'flex',
-            alignItems: 'center'
-          }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+          <div style={{ height: '38px', display: 'flex', alignItems: 'center' }}>
             <img src="/logo.png" alt="NewCityAgent Logo" style={{ height: '100%', objectFit: 'contain' }} />
           </div>
+          <span style={{ fontWeight: '700', fontSize: '1.15rem', color: '#ffffff', letterSpacing: '0.01em' }}>
+            NewCity<span style={{ color: 'var(--highlight-cyan)' }}>Agent</span>
+          </span>
         </div>
         <div style={{ borderLeft: '1px solid #333', paddingLeft: '20px' }}>
           <button 

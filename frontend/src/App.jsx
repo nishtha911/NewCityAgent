@@ -26,7 +26,7 @@ function AppContent() {
         color: 'white',
         boxShadow: '0 4px 6px rgba(0,0,0,0.1)'
       }}>
-        <h1 style={{ fontSize: '2.2rem', margin: 0, fontWeight: 'bold' }}>Agentic Banking Solution for Migrant Workers and Students</h1>
+        <h1 style={{ fontSize: '1.5rem', margin: 0, fontWeight: '600' }}>Agentic Banking Solution for Migrant Workers and Students</h1>
       </div>
       
       <main style={{ flexGrow: 1, backgroundColor: 'var(--bg-primary)', position: 'relative' }}>

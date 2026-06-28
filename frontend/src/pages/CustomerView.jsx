@@ -23,7 +23,7 @@ export default function CustomerView() {
       let targetUser = null;
       if (latestNotif) {
         // If there's a notification, show the simulator for that specific user
-        targetUser = data.users.find(u => u.phone === latestNotif.phone);
+        targetUser = data.users.find(u => u.id === latestNotif.userId);
         setNotification(latestNotif);
       }
       

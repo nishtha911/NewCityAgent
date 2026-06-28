@@ -4,7 +4,9 @@ import { NavLink } from 'react-router-dom';
 export default function Navbar() {
   const navItems = [
     { label: 'Admin Dashboard', path: '/' },
-    { label: 'Customer Simulator', path: '/customer' }
+    { label: 'Guided Demo', path: '/demo' },
+    { label: 'Customer Simulator', path: '/customer' },
+    { label: 'Signal Injector', path: '/signals' }
   ];
 
   return (

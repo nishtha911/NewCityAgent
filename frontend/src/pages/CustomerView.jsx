@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { getState, reactivateAccount, setupRemittance } from '../services/api';
 import { Smartphone, CheckCircle, ShieldAlert } from 'lucide-react';
 
+
+
 export default function CustomerView() {
   const [user, setUser] = useState(null);
   const [notification, setNotification] = useState(null);
@@ -78,9 +80,12 @@ export default function CustomerView() {
   const accountStatus = user?.accountStatus || user?.status || 'unknown';
 
   return (
-    <div style={{ padding: '40px 80px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+    <div style={{ padding: '40px 80px', display: 'flex', flexDirection: 'column', alignItems: 'stretch' }}>
 
-      {/* Toast notifications */}
+
+
+      {/* Simulated Android Device — centered below the info panel */}
+      <div style={{ display: 'flex', justifyContent: 'center' }}>
       {successMsg && (
         <div style={{ position: 'fixed', bottom: '20px', right: '20px', background: '#22c55e', color: 'white', padding: '12px 20px', borderRadius: '8px', zIndex: 9999, fontWeight: 'bold', boxShadow: '0 4px 12px rgba(0,0,0,0.2)' }}>
           {successMsg}
@@ -276,6 +281,9 @@ export default function CustomerView() {
           <div style={{ width: '14px', height: '14px', border: '2px solid #888', borderRadius: '2px' }} />
         </div>
       </div>
+      </div>
+
+
     </div>
   );
 }

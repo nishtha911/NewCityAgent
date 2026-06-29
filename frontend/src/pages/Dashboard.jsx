@@ -2,6 +2,8 @@ import React from 'react';
 import { triggerScenario, resetState } from '../services/api';
 import { RefreshCw, Zap } from 'lucide-react';
 
+
+
 export default function Dashboard() {
 
   const handleTrigger = async (scenario) => {
@@ -19,8 +21,8 @@ export default function Dashboard() {
   };
 
   return (
-    <div style={{ padding: '40px 80px', display: 'flex', justifyContent: 'center' }}>
-      
+    <div style={{ padding: '40px 80px' }}>
+
       {/* Controls Section */}
       <div style={{ flex: 1, maxWidth: '600px' }}>
         <h2 style={{ marginBottom: '20px', color: 'var(--primary-purple)' }}>Agent Control Panel</h2>
@@ -86,7 +88,8 @@ export default function Dashboard() {
           </button>
         </div>
       </div>
-      
+
+
     </div>
   );
 }

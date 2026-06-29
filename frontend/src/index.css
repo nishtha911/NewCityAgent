@@ -19,6 +19,11 @@
 
   --gradient-banner: linear-gradient(135deg, #f02d6b 0%, #3a1c71 100%);
   --gradient-btn: linear-gradient(90deg, #b0185e 0%, #3e1b70 100%);
+
+  /* InfoPanel — light mode */
+  --info-panel-bg: linear-gradient(135deg, #f0eeff 0%, #faf5ff 100%);
+  --info-panel-border: rgba(138, 99, 255, 0.22);
+  --info-panel-text: #44455a;
 }
 
 .dark {
@@ -33,6 +38,11 @@
   
   --card-border: #333333;
   --card-shadow: 0 4px 6px rgba(0,0,0,0.3);
+
+  /* InfoPanel — dark mode */
+  --info-panel-bg: linear-gradient(135deg, #0d0d1a 0%, #151528 100%);
+  --info-panel-border: rgba(138, 99, 255, 0.18);
+  --info-panel-text: #c8d0e0;
 }
 
 * {

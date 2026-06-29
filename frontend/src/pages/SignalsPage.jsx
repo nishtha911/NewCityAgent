@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { getState } from '../services/api';
 import { Smartphone, CreditCard, Send } from 'lucide-react';
 
+
+
 export default function SignalsPage() {
   const [form, setForm] = useState({ phone: '', source: 'ATM', city: '' });
   const [response, setResponse] = useState(null);
@@ -45,6 +47,8 @@ export default function SignalsPage() {
 
   return (
     <div style={{ padding: '40px 80px' }}>
+
+
       <h2 style={{ color: 'var(--primary-purple)', marginBottom: '20px' }}>Signal Injection Tool</h2>
       
       <div style={{ display: 'flex', gap: '40px' }}>

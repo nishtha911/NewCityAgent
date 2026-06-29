@@ -2,6 +2,8 @@ import React, { useState, Component } from 'react';
 import { triggerScenario, reactivateAccount, resetState } from '../services/api';
 import { Briefcase, GraduationCap, CheckCircle, ArrowRight, AlertTriangle, RotateCcw } from 'lucide-react';
 
+
+
 // Error Boundary to catch render crashes and show a useful message instead of white screen
 class ErrorBoundary extends Component {
   state = { hasError: false, error: null };
@@ -97,8 +99,8 @@ function DemoPageInner() {
   const notifMessage = signalResult.notification?.message || '';
 
   return (
-    <div style={{ padding: '40px 80px', maxWidth: '1000px', margin: '0 auto' }}>
-      
+    <div style={{ padding: '48px 80px', minHeight: 'calc(100vh - 140px)', display: 'flex', flexDirection: 'column' }}>
+
       {/* Error Banner */}
       {error && (
         <div style={{ background: '#fee2e2', border: '1px solid #f87171', borderRadius: '8px', padding: '15px 20px', marginBottom: '25px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -108,89 +110,95 @@ function DemoPageInner() {
       )}
 
       {/* Step Indicator */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '40px', position: 'relative' }}>
+      <div style={{ display: 'flex', justifyContent: 'center', gap: '0', marginBottom: '56px', position: 'relative', maxWidth: '500px', width: '100%', alignSelf: 'center' }}>
         <div style={{ position: 'absolute', top: '15px', left: '0', right: '0', height: '2px', background: 'var(--card-border)', zIndex: 0 }} />
+        <div style={{ position: 'absolute', top: '15px', left: '0', width: `${((step - 1) / 3) * 100}%`, height: '2px', background: 'var(--primary-purple)', zIndex: 0, transition: 'width 0.4s ease' }} />
         {[1, 2, 3, 4].map(num => (
-          <div key={num} style={{
-            width: '32px', height: '32px', borderRadius: '50%',
-            background: step >= num ? 'var(--primary-purple)' : 'var(--bg-secondary)',
-            color: step >= num ? 'white' : 'var(--text-secondary)',
-            border: step >= num ? 'none' : '2px solid var(--card-border)',
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            fontWeight: 'bold', zIndex: 1,
-            boxShadow: step === num ? '0 0 0 4px rgba(62,27,112,0.2)' : 'none'
-          }}>
-            {num}
+          <div key={num} style={{ flex: 1, display: 'flex', justifyContent: num === 1 ? 'flex-start' : num === 4 ? 'flex-end' : 'center', zIndex: 1 }}>
+            <div style={{
+              width: '34px', height: '34px', borderRadius: '50%',
+              background: step >= num ? 'var(--primary-purple)' : 'var(--bg-secondary)',
+              color: step >= num ? 'white' : 'var(--text-secondary)',
+              border: step >= num ? '2px solid var(--primary-purple)' : '2px solid var(--card-border)',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              fontWeight: 'bold',
+              boxShadow: step === num ? '0 0 0 5px rgba(62,27,112,0.25)' : 'none',
+              transition: 'all 0.3s ease'
+            }}>
+              {num}
+            </div>
           </div>
         ))}
       </div>
 
       {/* Step 1: Choose Scenario */}
       {step === 1 && (
-        <div>
-          <h2 style={{ textAlign: 'center', marginBottom: '10px', color: 'var(--primary-purple)' }}>Select a Demo Scenario</h2>
-          <p style={{ textAlign: 'center', color: 'var(--text-secondary)', marginBottom: '30px' }}>
+        <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
+          <h2 style={{ textAlign: 'center', marginBottom: '12px', color: 'var(--primary-purple)', fontSize: '1.75rem' }}>Select a Demo Scenario</h2>
+          <p style={{ textAlign: 'center', color: 'var(--text-secondary)', marginBottom: '48px' }}>
             Make sure you click <strong>Reset State</strong> on the Dashboard before running a fresh demo.
           </p>
-          <div style={{ display: 'flex', gap: '30px' }}>
+          <div style={{ display: 'flex', gap: '32px', flex: 1 }}>
 
             {/* Migrant Worker Card */}
             <div
               style={{
-                flex: 1, padding: '30px', borderRadius: '8px',
+                flex: 1, padding: '48px 36px', borderRadius: '12px',
                 cursor: loading ? 'not-allowed' : 'pointer',
                 border: scenario === 'migrant_worker' ? '2px solid var(--primary-purple)' : '2px solid transparent',
                 background: 'var(--bg-secondary)', boxShadow: 'var(--card-shadow)',
                 textAlign: 'center', opacity: (loading && scenario !== 'migrant_worker') ? 0.5 : 1,
-                transition: 'border 0.2s'
+                transition: 'border 0.2s, box-shadow 0.2s',
+                display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center'
               }}
               onClick={() => !loading && handleSelectScenario('migrant_worker')}
             >
-              <Briefcase size={48} color="var(--primary-purple)" style={{ display: 'block', margin: '0 auto 15px' }} />
-              <h3 style={{ color: 'var(--text-primary)' }}>Migrant Worker</h3>
-              <p style={{ color: 'var(--text-secondary)', marginTop: '10px' }}>Ramesh Kumar · Dormant Account</p>
-              <div style={{ marginTop: '15px', fontSize: '0.9rem', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '10px', color: 'var(--text-primary)' }}>
+              <Briefcase size={56} color="var(--primary-purple)" style={{ display: 'block', margin: '0 auto 20px' }} />
+              <h3 style={{ color: 'var(--text-primary)', fontSize: '1.3rem' }}>Migrant Worker</h3>
+              <p style={{ color: 'var(--text-secondary)', marginTop: '12px', fontSize: '0.95rem' }}>Ramesh Kumar · Dormant Account</p>
+              <div style={{ marginTop: '20px', fontSize: '0.95rem', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '12px', color: 'var(--text-primary)' }}>
                 <span>Patna</span> <ArrowRight size={14} /> <span>Bengaluru</span>
               </div>
-              <div style={{ marginTop: '15px', padding: '5px 10px', background: '#3e1b7015', color: 'var(--primary-purple)', borderRadius: '4px', display: 'inline-block', fontSize: '0.85rem', fontWeight: 'bold' }}>
+              <div style={{ marginTop: '20px', padding: '6px 14px', background: '#3e1b7018', color: 'var(--primary-purple)', borderRadius: '6px', display: 'inline-block', fontSize: '0.85rem', fontWeight: 'bold' }}>
                 ATM Geolocation Signal
               </div>
               {loading && scenario === 'migrant_worker' && (
-                <p style={{ marginTop: '15px', color: 'var(--highlight-cyan)' }}>Running LLM Agent...</p>
+                <p style={{ marginTop: '20px', color: 'var(--highlight-cyan)' }}>Running LLM Agent...</p>
               )}
             </div>
 
             {/* Student Card */}
             <div
               style={{
-                flex: 1, padding: '30px', borderRadius: '8px',
+                flex: 1, padding: '48px 36px', borderRadius: '12px',
                 cursor: loading ? 'not-allowed' : 'pointer',
                 border: scenario === 'student' ? '2px solid var(--secondary-magenta)' : '2px solid transparent',
                 background: 'var(--bg-secondary)', boxShadow: 'var(--card-shadow)',
                 textAlign: 'center', opacity: (loading && scenario !== 'student') ? 0.5 : 1,
-                transition: 'border 0.2s'
+                transition: 'border 0.2s, box-shadow 0.2s',
+                display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center'
               }}
               onClick={() => !loading && handleSelectScenario('student')}
             >
-              <GraduationCap size={48} color="var(--secondary-magenta)" style={{ display: 'block', margin: '0 auto 15px' }} />
-              <h3 style={{ color: 'var(--text-primary)' }}>Student</h3>
-              <p style={{ color: 'var(--text-secondary)', marginTop: '10px' }}>Priya Sharma · No Account</p>
-              <div style={{ marginTop: '15px', fontSize: '0.9rem', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '10px', color: 'var(--text-primary)' }}>
+              <GraduationCap size={56} color="var(--secondary-magenta)" style={{ display: 'block', margin: '0 auto 20px' }} />
+              <h3 style={{ color: 'var(--text-primary)', fontSize: '1.3rem' }}>Student</h3>
+              <p style={{ color: 'var(--text-secondary)', marginTop: '12px', fontSize: '0.95rem' }}>Priya Sharma · No Account</p>
+              <div style={{ marginTop: '20px', fontSize: '0.95rem', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '12px', color: 'var(--text-primary)' }}>
                 <span>Ranchi</span> <ArrowRight size={14} /> <span>Pune</span>
               </div>
-              <div style={{ marginTop: '15px', padding: '5px 10px', background: '#b0185e15', color: 'var(--secondary-magenta)', borderRadius: '4px', display: 'inline-block', fontSize: '0.85rem', fontWeight: 'bold' }}>
+              <div style={{ marginTop: '20px', padding: '6px 14px', background: '#b0185e18', color: 'var(--secondary-magenta)', borderRadius: '6px', display: 'inline-block', fontSize: '0.85rem', fontWeight: 'bold' }}>
                 SIM Roaming Signal
               </div>
               {loading && scenario === 'student' && (
-                <p style={{ marginTop: '15px', color: 'var(--highlight-cyan)' }}>Running LLM Agent...</p>
+                <p style={{ marginTop: '20px', color: 'var(--highlight-cyan)' }}>Running LLM Agent...</p>
               )}
             </div>
           </div>
 
-          <div style={{ textAlign: 'center', marginTop: '30px' }}>
+          <div style={{ textAlign: 'center', marginTop: '40px', paddingBottom: '20px' }}>
             <button
               onClick={handleReset}
-              style={{ background: 'transparent', border: '1px solid var(--card-border)', color: 'var(--text-secondary)', padding: '8px 16px', borderRadius: '4px', display: 'inline-flex', alignItems: 'center', gap: '6px' }}
+              style={{ background: 'transparent', border: '1px solid var(--card-border)', color: 'var(--text-secondary)', padding: '10px 20px', borderRadius: '6px', display: 'inline-flex', alignItems: 'center', gap: '8px', fontSize: '0.9rem' }}
             >
               <RotateCcw size={14} /> Reset Backend State
             </button>
@@ -200,7 +208,7 @@ function DemoPageInner() {
 
       {/* Step 2: Signal Detected */}
       {step === 2 && (
-        <div style={{ textAlign: 'center' }}>
+        <div style={{ textAlign: 'center', flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
           <h2 style={{ marginBottom: '20px', color: 'var(--primary-purple)' }}>Agent Signal Processing</h2>
 
           {!cityChanged ? (
@@ -252,8 +260,8 @@ function DemoPageInner() {
 
       {/* Step 3: Onboarding */}
       {step === 3 && (
-        <div>
-          <h2 style={{ textAlign: 'center', marginBottom: '30px', color: 'var(--primary-purple)' }}>Customer Onboarding</h2>
+        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+          <h2 style={{ textAlign: 'center', marginBottom: '36px', color: 'var(--primary-purple)', fontSize: '1.75rem' }}>Customer Onboarding</h2>
 
           <div style={{ background: 'var(--bg-secondary)', padding: '30px', borderRadius: '8px', border: '1px solid var(--card-border)', maxWidth: '500px', margin: '0 auto' }}>
             {scenario === 'migrant_worker' ? (
@@ -295,8 +303,8 @@ function DemoPageInner() {
 
       {/* Step 4: Complete */}
       {step === 4 && (
-        <div style={{ textAlign: 'center' }}>
-          <CheckCircle size={64} color="#4ade80" style={{ display: 'block', margin: '0 auto 20px' }} />
+        <div style={{ textAlign: 'center', flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
+          <CheckCircle size={72} color="#4ade80" style={{ display: 'block', margin: '0 auto 24px' }} />
           <h2 style={{ marginBottom: '10px', color: 'var(--primary-purple)' }}>Journey Complete!</h2>
           <p style={{ color: 'var(--text-secondary)', marginBottom: '30px' }}>
             {scenario === 'migrant_worker'
@@ -311,6 +319,8 @@ function DemoPageInner() {
           </button>
         </div>
       )}
+
+
 
     </div>
   );

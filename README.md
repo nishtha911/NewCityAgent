@@ -6,6 +6,24 @@ Developed as part of **Idea #7 (Pillar 1)**, this system aims to capture the cri
 
 ---
 
+## Table of Contents
+
+- [Core Problem](#core-problem)
+- [User Personas](#user-personas)
+- [Tech Stack](#tech-stack)
+- [Project Structure](#project-structure)
+- [Getting Started](#getting-started)
+- [Frontend Pages](#frontend-pages)
+- [Agentic Behavior & Hyper-Personalization](#agentic-behavior--hyper-personalization)
+- [Technical Architecture](#technical-architecture)
+- [SBI Integration Points](#sbi-integration-points)
+- [End-to-End Journey Flow](#end-to-end-journey-flow)
+- [Compliance, Security & Privacy](#compliance-security--privacy)
+- [Key Success Metrics](#key-success-metrics)
+- [Hackathon Demo Scenario](#hackathon-demo-scenario)
+
+---
+
 ## Core Problem
 
 - **The Scale:** Over 30 million internal migrants change cities annually in India.
@@ -18,6 +36,141 @@ Developed as part of **Idea #7 (Pillar 1)**, this system aims to capture the cri
 
 - **Internal Migrant Workers:** Individuals relocating for employment who require rapid, reliable remittance services to send money home to their families.
 - **Students (Ages 18–24):** Individuals moving for higher education who require student accounts, digital payment setups, and potential education loan pre-qualification.
+
+---
+
+## Tech Stack
+
+| Layer      | Technology                                                             |
+| ---------- | ---------------------------------------------------------------------- |
+| Frontend   | React 19, Vite 8, React Router 7, Lucide React (icons), Vanilla CSS   |
+| Backend    | Node.js, Express 4, Google Generative AI (Gemini), Morgan (logging)    |
+| Database   | In-memory JavaScript store (no external DB required)                   |
+| Tooling    | Concurrently (monorepo dev runner), dotenv, oxlint                     |
+
+---
+
+## Project Structure
+
+```
+NewCityAgent/
+├── package.json                  # Root — runs both frontend & backend via `concurrently`
+│
+├── backend/
+│   ├── server.js                 # Express server entry point (port 3001)
+│   ├── config.js                 # Environment config (Gemini API key, port)
+│   ├── verify.js                 # Backend integration test script
+│   └── src/
+│       ├── db/
+│       │   └── inMemoryDb.js     # In-memory user, signal & notification store
+│       ├── routes/
+│       │   └── api.js            # REST API endpoints (/api/*)
+│       └── services/
+│           ├── cbsService.js     # Core Banking System (CBS) mock gateway
+│           ├── llmService.js     # Gemini LLM personalization engine
+│           └── locationProcessor.js  # City-change detection logic
+│
+└── frontend/
+    ├── vite.config.js            # Vite dev server (port 3000), proxies /api → :3001
+    ├── index.html                # HTML entry
+    └── src/
+        ├── main.jsx              # React DOM mount
+        ├── App.jsx               # Root layout, routing, shared InfoPanel
+        ├── index.css             # Global CSS variables & dark/light theming
+        ├── services/
+        │   └── api.js            # Frontend HTTP client for backend APIs
+        ├── components/
+        │   └── layout/
+        │       ├── Header.jsx    # Top header bar
+        │       ├── Navbar.jsx    # Tab navigation (Dashboard / Demo / Customer / Signals)
+        │       └── InfoPanel.jsx # Reusable instruction & system-logic panel
+        └── pages/
+            ├── Dashboard.jsx     # Admin control panel — trigger scenarios & reset state
+            ├── DemoPage.jsx      # Guided 4-step demo walkthrough
+            ├── CustomerView.jsx  # Simulated Android phone showing AI notifications
+            └── SignalsPage.jsx   # Manual signal injection & signal log viewer
+```
+
+---
+
+## Getting Started
+
+### Prerequisites
+
+- **Node.js** ≥ 18
+- **npm** ≥ 9
+- A **Gemini API key** (optional — the LLM service falls back to template messages without one)
+
+### Installation
+
+```bash
+# Clone the repository
+git clone https://github.com/your-org/NewCityAgent.git
+cd NewCityAgent
+
+# Install all dependencies (root + backend + frontend)
+npm run install:all
+```
+
+### Environment Variables
+
+Create a `.env` file inside `backend/`:
+
+```env
+GEMINI_API_KEY=your_gemini_api_key_here
+```
+
+### Running in Development
+
+```bash
+# From the project root — starts both backend (port 3001) and frontend (port 3000)
+npm run dev
+```
+
+Or run them individually:
+
+```bash
+# Backend only
+cd backend
+npm start
+
+# Frontend only (in a separate terminal)
+cd frontend
+npm run dev
+```
+
+Open **http://localhost:3000** in your browser.
+
+### Running Tests
+
+```bash
+cd backend
+npm test
+```
+
+---
+
+## Frontend Pages
+
+The app has four tabs, each accessible from the navigation bar. Every page includes a shared **InfoPanel** at the bottom that displays user instructions and an explanation of the system logic running under the hood.
+
+| Tab                   | Route        | Description                                                                                          |
+| --------------------- | ------------ | ---------------------------------------------------------------------------------------------------- |
+| **Admin Dashboard**   | `/`          | Trigger pre-defined demo scenarios (Migrant Worker / Student) and reset backend state.               |
+| **Guided Demo**       | `/demo`      | A 4-step interactive walkthrough: scenario → signal detection → onboarding → completion.             |
+| **Customer Simulator**| `/customer`  | A simulated Android device that shows real-time AI notifications and supports OTP reactivation / remittance setup. |
+| **Signal Injection**  | `/signals`   | Manually inject arbitrary location signals (phone + source + city) and inspect recent signal logs.   |
+
+### Shared Layout
+
+The `App.jsx` component provides the shared layout for all pages:
+- **Header** — branding bar
+- **Navbar** — tab navigation
+- **Gradient Banner** — page title
+- **Page Content** — route-specific component
+- **InfoPanel** — contextual instructions and system logic (always at the bottom)
+
+The InfoPanel content updates automatically based on the active route.
 
 ---
 
